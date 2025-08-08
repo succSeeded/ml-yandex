@@ -1,5 +1,4 @@
 import numpy as np
-from scipy.stats import mode
 from sklearn.base import ClassifierMixin
 
 
@@ -14,7 +13,8 @@ class MostFrequentClassifier(ClassifierMixin):
         y : array like, shape = (_samples,)
         Training data targets
         """
-        self.mostFrequent = mode(y)[0]
+        uniques, counts = np.unique(y, return_counts=True)
+        self.mode_ = uniques[np.argmax(counts)]
 
     def predict(self, X=None):
         """
@@ -23,4 +23,4 @@ class MostFrequentClassifier(ClassifierMixin):
         X : array like, shape = (n_samples, n_features)
         Data to predict
         """
-        return self.mostFrequent * np.ones((X.shape[0],))
+        return np.ones((X.shape[0],)) * self.mode_
